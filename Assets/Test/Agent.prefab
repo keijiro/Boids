@@ -69,14 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04face5dab712413391f37de50435f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  minVelocity: 3
-  maxVelocity: 9
-  rotationCoeff: -4
-  neighborDist: 1.39999998
-  searchLayer:
-    serializedVersion: 2
-    m_Bits: 256
+  controller: {fileID: 0}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -88,7 +81,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: .200000003
-  m_Center: {x: 0, y: .0596002005, z: .0180880055}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
