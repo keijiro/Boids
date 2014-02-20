@@ -1,17 +1,38 @@
-﻿using UnityEngine;
+﻿//
+// Boids - Flocking behavior simulation.
+//
+// Copyright (C) 2014 Keijiro Takahashi
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+using UnityEngine;
 using System.Collections;
 
 public class BoidBehaviour : MonoBehaviour
 {
+    // Reference to the controller.
     public BoidController controller;
 
+    // Random seed.
     float noiseOffset;
 
-    void Start()
-    {
-        noiseOffset = Random.value * 10.0f;
-    }
-
+    // Caluculates the separation vector with a target.
     Vector3 GetSeparationVector(Transform target)
     {
         var diff = transform.position - target.transform.position;
@@ -20,29 +41,30 @@ public class BoidBehaviour : MonoBehaviour
         return diff * (scaler / diffLen);
     }
 
-    void RotateSmooth(Quaternion target)
+    void Start()
     {
-        var current = transform.rotation;
-        if (current != target)
-            transform.rotation = Quaternion.Lerp(target, current, Mathf.Exp(-controller.rotationCoeff * Time.deltaTime));
+        noiseOffset = Random.value * 10.0f;
     }
-    
+
     void Update()
     {
-        // The current velocity randomized by noise.
+        var currentPosition = transform.position;
+        var currentRotation = transform.rotation;
+
+        // Current velocity randomized with noise.
         var noise = Mathf.PerlinNoise(Time.time, noiseOffset) * 2.0f - 1.0f;
         var velocity = controller.velocity * (1.0f + noise * controller.velocityVariation);
 
-        // Initial vectors.
+        // Initializes the vectors.
         var separation = Vector3.zero;
         var alignment = controller.transform.forward;
         var cohesion = controller.transform.position;
 
-        // Looks up the overlapped boids.
-        var overlappedBoids = Physics.OverlapSphere(transform.position, controller.neighborDist, controller.searchLayer);
+        // Looks up nearby boids.
+        var nearbyBoids = Physics.OverlapSphere(currentPosition, controller.neighborDist, controller.searchLayer);
 
         // Accumulates the vectors.
-        foreach (var boid in overlappedBoids)
+        foreach (var boid in nearbyBoids)
         {
             if (boid.gameObject == gameObject) continue;
             var t = boid.transform;
@@ -51,17 +73,23 @@ public class BoidBehaviour : MonoBehaviour
             cohesion += t.position;
         }
 
-        var averager = 1.0f / overlappedBoids.Length;
-        alignment *= averager;
-        cohesion *= averager;
-        cohesion = (cohesion - transform.position).normalized;
+        var avg = 1.0f / nearbyBoids.Length;
+        alignment *= avg;
+        cohesion *= avg;
+        cohesion = (cohesion - currentPosition).normalized;
 
-        // Gets a rotation from the vectors.
+        // Calculates a rotation from the vectors.
         var direction = separation + alignment + cohesion;
         var rotation = Quaternion.FromToRotation(Vector3.forward, direction.normalized);
 
-        // Applys to the transform.
-        transform.position += transform.forward * (velocity * Time.deltaTime);
-        RotateSmooth(rotation);
+        // Applys the rotation with interpolation.
+        if (rotation != currentRotation)
+        {
+            var ip = Mathf.Exp(-controller.rotationCoeff * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(rotation, currentRotation, ip);
+        }
+
+        // Moves forawrd.
+        transform.position = currentPosition + transform.forward * (velocity * Time.deltaTime);
     }
 }
