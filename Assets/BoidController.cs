@@ -8,8 +8,11 @@ public class BoidController : MonoBehaviour
     public int numberOfAgents = 10;
     public float spawnRadius = 4.0f;
 
-    public float minVelocity = 3.0f;
-    public float maxVelocity = 9.0f;
+    [Range(0.1f, 20.0f)]
+    public float velocity = 6.0f;
+
+    [Range(0.0f, 0.9f)]
+    public float velocityVariation = 0.5f;
 
     [Range(0.1f, 20.0f)]
     public float rotationCoeff = 4.0f;

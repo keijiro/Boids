@@ -30,7 +30,8 @@ public class BoidBehaviour : MonoBehaviour
     void Update()
     {
         // The current velocity randomized by noise.
-        var velocity = Mathf.Lerp(controller.minVelocity, controller.maxVelocity, Mathf.PerlinNoise(Time.time, noiseOffset));
+        var noise = Mathf.PerlinNoise(Time.time, noiseOffset) * 2.0f - 1.0f;
+        var velocity = controller.velocity * (1.0f + noise * controller.velocityVariation);
 
         // Initial vectors.
         var separation = Vector3.zero;
@@ -57,7 +58,7 @@ public class BoidBehaviour : MonoBehaviour
 
         // Gets a rotation from the vectors.
         var direction = separation + alignment + cohesion;
-        var rotation = Quaternion.FromToRotation(Vector3.forward, direction);
+        var rotation = Quaternion.FromToRotation(Vector3.forward, direction.normalized);
 
         // Applys to the transform.
         transform.position += transform.forward * (velocity * Time.deltaTime);
