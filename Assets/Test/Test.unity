@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 100000, guid: 354e86f41ea4845948b8fe4601eccb24, type: 2}
-  numberOfAgents: 120
+  spawnCount: 90
   spawnRadius: 2
   velocity: 6
   velocityVariation: .5

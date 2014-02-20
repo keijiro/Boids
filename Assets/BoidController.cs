@@ -28,7 +28,7 @@ public class BoidController : MonoBehaviour
 {
     public GameObject boidPrefab;
 
-    public int numberOfAgents = 10;
+    public int spawnCount = 10;
 
     public float spawnRadius = 4.0f;
 
@@ -48,7 +48,7 @@ public class BoidController : MonoBehaviour
 
     void Start()
     {
-        for (var i = 0; i < numberOfAgents; i++)
+        for (var i = 0; i < spawnCount; i++)
         {
             var position = transform.position + Random.insideUnitSphere * spawnRadius;
             var boid = Instantiate(boidPrefab, position, Random.rotation) as GameObject;
