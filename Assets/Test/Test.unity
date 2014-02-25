@@ -303,6 +303,7 @@ GameObject:
   - 4: {fileID: 1240853474}
   - 114: {fileID: 1240853475}
   - 114: {fileID: 1240853476}
+  - 114: {fileID: 1240853477}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -353,7 +354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 100000, guid: 354e86f41ea4845948b8fe4601eccb24, type: 2}
-  spawnCount: 90
+  spawnCount: 0
   spawnRadius: 2
   velocity: 6
   velocityVariation: .5
@@ -362,6 +363,17 @@ MonoBehaviour:
   searchLayer:
     serializedVersion: 2
     m_Bits: 256
+--- !u!114 &1240853477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1240853473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d328b4fb9a1484874a5f59f54b3343b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1620263374
 GameObject:
   m_ObjectHideFlags: 0

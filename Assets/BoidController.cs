@@ -48,11 +48,19 @@ public class BoidController : MonoBehaviour
 
     void Start()
     {
-        for (var i = 0; i < spawnCount; i++)
-        {
-            var position = transform.position + Random.insideUnitSphere * spawnRadius;
-            var boid = Instantiate(boidPrefab, position, Random.rotation) as GameObject;
-            boid.GetComponent<BoidBehaviour>().controller = this;
-        }
+        for (var i = 0; i < spawnCount; i++) Spawn();
+    }
+
+    public GameObject Spawn()
+    {
+        return Spawn(transform.position + Random.insideUnitSphere * spawnRadius);
+    }
+
+    public GameObject Spawn(Vector3 position)
+    {
+        var rotation = Quaternion.Slerp(transform.rotation, Random.rotation, 0.3f);
+        var boid = Instantiate(boidPrefab, position, rotation) as GameObject;
+        boid.GetComponent<BoidBehaviour>().controller = this;
+        return boid;
     }
 }
