@@ -29,6 +29,9 @@ public class BoidBehaviour : MonoBehaviour
     // Reference to the controller.
     public BoidController controller;
 
+    // Options for animation playback.
+    public float animationSpeedVariation = 0.2f;
+
     // Random seed.
     float noiseOffset;
 
@@ -44,6 +47,10 @@ public class BoidBehaviour : MonoBehaviour
     void Start()
     {
         noiseOffset = Random.value * 10.0f;
+
+        var animator = GetComponent<Animator>();
+        if (animator)
+            animator.speed = Random.Range(-1.0f, 1.0f) * animationSpeedVariation + 1.0f;
     }
 
     void Update()
